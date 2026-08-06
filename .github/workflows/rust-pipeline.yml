@@ -16,6 +16,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+        
+    defaults:
+      run:
+        working-directory: ./pg-telemetry-bulk-loader  # Путь к проекту
     
     steps:
     - uses: actions/checkout@v4
