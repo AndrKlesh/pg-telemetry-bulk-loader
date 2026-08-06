@@ -45,4 +45,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: pg-telemetry-bulk-loader-${{ matrix.os }}
-        path: target/release/pg-telemetry-bulk-loader/pg-telemetry-bulk-loader*
+        path: target/release/deps/pg-telemetry-bulk-loader*
