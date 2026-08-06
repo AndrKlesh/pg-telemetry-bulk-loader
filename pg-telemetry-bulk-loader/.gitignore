@@ -1,3 +1,5 @@
+# Файлы VSCode
+.vscode/
 # Скомпилированные артефакты Cargo
 /target/
 debug/
