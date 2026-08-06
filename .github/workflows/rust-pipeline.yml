@@ -10,6 +10,31 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: pg-telemetry-bulk-loader
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Cache cargo registry
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          pg-telemetry-bulk-loader/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('pg-telemetry-bulk-loader/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+    
+    - name: Lint with clippy
+      run: cargo clippy -- -D warnings
+      
   build:
     name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
