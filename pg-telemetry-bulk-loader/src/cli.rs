@@ -36,12 +36,23 @@ pub enum LogLevel {
 }
 
 // Функция
-pub fn get_args() -> Arguments {
+pub fn get_args() -> Result<Arguments,String> {
     let args = Arguments::parse(); // парсинг структуры аргументов
     // Проверка количества строк
     if args.batch_size == 0 || args.batch_size > 1000000 {
-        eprintln!("Ошибка: Количество строк в буфере должно быть > 0 и ≤ 1 000 000 
-        (batch-size должен быть от 1 до 1 000 000.)"); // eprintln!() - для того чтоббы вывело в поток ошибок
-        std::process::exit(1); // завершаем программу с кодом 1 (ошибка)
+        return Err("Ошибка: Количество строк в буфере должно быть > 0 и ≤ 1 000 000 
+        (batch-size должен быть от 1 до 1 000 000.)".to_string()); // eprintln!() - для того чтоббы вывело в поток ошибок
     }
+    // Проверка каталога
+    if !args.input_dir.exists() { // если НЕ существует
+        return Err("Ошибка: Указанный каталог не существует.".to_string());
+    }
+    if !args.input_dir.is_dir() { // если НЕ является папкой 
+        return Err("Ошибка: Указанный путь не является каталогом.".to_string());
+    }
+    // Проверка строки подключения
+    if !args.db_connection.contains("host=") || !args.db_connection.contains("dbname=") || !args.db_connection.contains("user=") {
+        return Err("Ошибка: неправильная строка подключения к PostgreSQL.".to_string());
+    }
+    Ok(args);
 }
