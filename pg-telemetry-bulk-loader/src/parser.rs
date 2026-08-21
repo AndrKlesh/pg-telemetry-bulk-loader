@@ -82,10 +82,7 @@ pub fn parse_measurement(line: &str) -> Option<Measurement> {
         }
     };
     // Timestamp должен иметь формат: YYYY-MM-DD HH:MM:SS
-    let timestamp = match NaiveDateTime::parse_from_str(
-        &record[3],
-        "%Y-%m-%d %H:%M:%S",
-    ) {
+    let timestamp = match NaiveDateTime::parse_from_str(&record[3], "%Y-%m-%d %H:%M:%S") {
         Ok(timestamp) => timestamp,
         Err(_) => {
             error!(

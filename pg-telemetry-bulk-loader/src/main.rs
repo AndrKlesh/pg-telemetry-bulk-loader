@@ -1,7 +1,7 @@
 mod cli; //работа с модулями
 mod logger;
-mod scanner;
 mod parser;
+mod scanner;
 use crate::cli::get_args;
 use crate::parser::parse_measurement;
 use log::{debug, info, trace, warn}; //еще error, но просто не используется
@@ -63,4 +63,3 @@ fn main() {
     //println!("Размер batch: {}", args.batch_size);
     //println!("Уровень логирования: {:?}", args.log_level); // {:?} - вывод через Debug, так проще посмотреть что лежит в LogLevel
 }
-

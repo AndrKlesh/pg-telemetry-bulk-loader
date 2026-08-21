@@ -5,10 +5,16 @@ use std::path::{Path, PathBuf};
 // рекурсивно ищет CSV-файлы в каталоге
 pub fn scan_directory(path: &Path) -> io::Result<Vec<PathBuf>> {
     if !path.exists() {
-        return Err(io::Error::new(io::ErrorKind::NotFound,"Каталог не существует",));
+        return Err(io::Error::new(
+            io::ErrorKind::NotFound,
+            "Каталог не существует",
+        ));
     }
     if !path.is_dir() {
-        return Err(io::Error::new(io::ErrorKind::InvalidInput,"Указанный путь не является каталогом",));
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "Указанный путь не является каталогом",
+        ));
     }
     let mut files = Vec::new();
     scan_recursive(path, &mut files)?;
@@ -36,9 +42,7 @@ fn scan_recursive(path: &Path, files: &mut Vec<PathBuf>) -> io::Result<()> {
 // проверяет, является ли файл CSV
 fn is_csv(path: &Path) -> bool {
     match path.extension() {
-        Some(extension) => {
-            extension.to_string_lossy().eq_ignore_ascii_case("csv")
-        }
+        Some(extension) => extension.to_string_lossy().eq_ignore_ascii_case("csv"),
         None => false,
     }
 }

@@ -56,24 +56,19 @@ pub fn init(log_level: LogLevel) {
         }
     }
     // настраиваем формат сообщений в консоли
-    builder.format(|buf, record| { 
-        let (label, color) = match record.target() { // задаем цвета
-            "critical" => ("CRIT", "\x1b[31m"), // красный
+    builder.format(|buf, record| {
+        let (label, color) = match record.target() {
+            // задаем цвета
+            "critical" => ("CRIT", "\x1b[31m"),     // красный
             "error" => ("ERROR", "\x1b[38;5;208m"), // оранжевый
-            "warning" => ("WARN", "\x1b[33m"), // жёлтый
-            "info" => ("INFO", "\x1b[34m"), // синий
-            "debug" => ("DEBUG", "\x1b[35m"), // фиолетовый
-            "trace" => ("TRACE", "\x1b[90m"), // серый
+            "warning" => ("WARN", "\x1b[33m"),      // жёлтый
+            "info" => ("INFO", "\x1b[34m"),         // синий
+            "debug" => ("DEBUG", "\x1b[35m"),       // фиолетовый
+            "trace" => ("TRACE", "\x1b[90m"),       // серый
             _ => ("LOG", "\x1b[0m"), // запасной вариант для сообщений с неизвестным target
         };
         // "\x1b[0m" сбрасывает цвет после названия уровня, чтобы остальной текст терминала не оставался цветным.
-        writeln!(
-            buf,
-            "{}{}\x1b[0m {}",
-            color,
-            label,
-            record.args()
-        )
+        writeln!(buf, "{}{}\x1b[0m {}", color, label, record.args())
     });
     builder.init();
 }
