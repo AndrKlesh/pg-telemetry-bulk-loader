@@ -65,8 +65,11 @@ fn main() {
         Ok(measurement) => {
             info!(
                 target: "info",
-                "Измерение успешно обработано: {:?}",
-                measurement
+                "Измерение успешно обработано: object_id={}, measure_type_id={}, value={}, timestamp={}", // использовал поля, которые раньше не использовались и выдавали ошибку
+                measurement.object_id,
+                measurement.measure_type_id,
+                measurement.value,
+                measurement.timestamp
             );
         }
         Err(error) => {
