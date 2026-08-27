@@ -1,10 +1,30 @@
 mod cli; //работа с модулями
 mod logger;
 mod parser;
+mod reader;
 mod scanner;
 use crate::cli::get_args;
-use crate::parser::parse_measurement;
-use log::{debug, error, info, trace};
+use log::{debug, info, trace};
+
+pub fn load_batch(batch: &[parser::Measurement]) {
+    // сделал load_batch публичной
+    info!(
+        target: "info",
+        "Загрузка batch: {} измерений",
+        batch.len()
+    );
+    if let Some(first) = batch.first() {
+        // потом это нужно будет убрать, либо что-то с этим сделать
+        debug!(
+            target: "debug",
+            "Первое измерение batch: object_id={}, measure_type_id={}, value={}, timestamp={}",
+            first.object_id,
+            first.measure_type_id,
+            first.value,
+            first.timestamp
+        );
+    }
+}
 
 fn main() {
     let args = match get_args() {
@@ -58,31 +78,16 @@ fn main() {
             file.display()
         );
     }
-    // Здесь просто проверяю работу парсера.
-    // Дальше здесь будет чтение строк.
-    let test_line = r#"1001,1,23.5,"2026-07-15 14:30:00""#;
-    match parse_measurement(test_line) {
-        Ok(measurement) => {
-            info!(
-                target: "info",
-                "Измерение успешно обработано: {:?}",
-                measurement
-            );
-        }
-        Err(error) => {
-            error!(
-                target: "error",
-                "Ошибка парсинга: {}",
-                error
-            );
-        }
+    // Создаём пустой буфер с заранее выделенной ёмкостью.
+    // думал сделать через vec![Measurement; batch_size], НО как я понял отличие в том что этот вариант создаст уже заполненный,
+    // поскольку нужен пустой, я нашел вот такое решение:
+    let mut batch = Vec::with_capacity(args.batch_size);
+    // Обрабатываем каждый CSV-файл.
+    for file in &files {
+        reader::process_file(file, &mut batch, args.batch_size);
     }
     info!(
         target: "info",
         "Сканирование завершено"
     );
-
-    //println!("Каталог: {}", args.input_dir.display());
-    //println!("Размер batch: {}", args.batch_size);
-    //println!("Уровень логирования: {:?}", args.log_level); // {:?} - вывод через Debug, так проще посмотреть что лежит в LogLevel
 }
